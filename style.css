@@ -1,0 +1,53 @@
+.btn {
+    height: 100px;
+    width: 100px;
+    font-weight: bold;
+    margin: 0px;
+    border: none;
+    font-size: 30px;
+    color: black;
+}
+
+.abc {
+    display: flex;
+    flex-wrap: wrap;
+    height: 300px;
+    width: 300px;
+    background-color: aqua;
+
+}
+
+.thanh {
+
+    background-image: url(`images/z3874952581362_daef7a6bbf64524d56a621ff99cc0848.jpg`);
+}
+
+.btn2 {
+
+    text-align: center;
+    size: 20px;
+    margin-top: 5px;
+    border-radius: 100px;
+    background: none;
+    border: none;
+
+}
+
+.btn3 {
+    height: 40px;
+    width: 70px;
+    margin-left: 5px;
+    size: 20px;
+    border-radius: 50px;
+    background-color: rgb(111, 219, 219);
+    color: rgb(17, 74, 17);
+}
+
+.btn4 {
+    height: 40px;
+    width: 90px;
+    margin-left: 5px;
+    border-radius: 50px;
+    background-color: rgb(111, 219, 219);
+    color: rgb(17, 74, 17);
+}

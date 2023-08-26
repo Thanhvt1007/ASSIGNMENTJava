@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TRÒ CHƠI 3X3</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        .clock {
+            height: 40px;
+            width: 270px;
+            text-align: center;
+        }
+
+        body {
+
+            background-color: rgb(229, 253, 209);
+        }
+
+        .ima,
+        .all,
+        .img2 {
+            display: inline-block;
+        }
+
+        .ima {
+            position: absolute;
+            top: 25px;
+            left: 25px;
+        }
+
+        .img2 {
+            position: absolute;
+            top: 25px;
+            right: 25px;
+        }
+
+        .a1 {
+            text-decoration: none;
+        }
+
+        .a2 {
+            border-radius: 50px;
+            color: red;
+            background-color: rgb(173, 216, 173);
+            line-height: 30px;
+
+        }
+
+        .btn7 {
+            height: 60px;
+            width: 60px;
+            background: none;
+            border: none;
+            margin-left: 100px;
+        }
+    </style>
+</head>
+
+<body>
+    <audio id="nhac" src="SeeTinhCucakRemix-HoangThuyLinh-7208579.mp3" autoplay loop></audio>
+    <audio id="nhac2" src="a2.mp3"></audio>
+    <center>
+        <img class="ima" src="images/h1.jpg" alt="" height="450px" width="300px">
+        <div class="all">
+            <div class="clock">
+                <!-- thiết kế đồng hồ -->
+                <h3 id="myclock">00 :01 :30</h3>
+            </div>
+            <!-- Phần 1-------------------------------------------------------------------------------------------------------- -->
+            <!-- Thiết kế giao diện là một bảng 3*3  -->
+            <div class="abc">
+                <!-- Hàng 0 -->
+                <button onclick="move(0,0)" id="b00" class="btn">1</button>
+                <button onclick="move(0,1)" id="b01" class="btn">2</button>
+                <button onclick="move(0,2)" id="b02" class="btn">3</button>
+                <br>
+                <!-- Hàng 1 -->
+                <button onclick="move(1,0)" id="b10" class="btn">4</button>
+                <button onclick="move(1,1)" id="b11" class="btn">5</button>
+                <button onclick="move(1,2)" id="b12" class="btn">6</button>
+                <br>
+                <button onclick="move(2,0)" id="b20" class="btn">7</button>
+                <button onclick="move(2,1)" id="b21" class="btn">8</button>
+                <button onclick="move(2,2)" id="b22" class="btn">9</button>
+                <br>
+                <br>
+                <br>
+            </div>
+            <br>
+            <!-- //----------------------------------------------// -->
+            <!-- ĐỔI MÀU THEO Ý MUỐN CỦA NGƯỜI CHƠI -->
+            <br>
+            <button class="btn2" onclick="doiMau()"><img src="images/a1111.png" alt="" height="75px"
+                    width="110px"></button>
+
+            <button class="btn7" onclick="soud()">
+                <!-- Loa-------------------------------------------- -->
+                <img id="ON" src="images/loa1ab.png" alt="" height="70px" width="60px">
+                <img id="OFF" hidden src="images/loa2_clipdrop-background-removal.png" alt="" height="70px"
+                    width="60px">
+            </button>
+            <br>
+            <!-- -------------------------------------------------------- -->
+            <button id="upto4" hidden class="a2" onclick="document.getElementById('nhac1').play();">
+                <a href="4.4.html" class="a1">LEVEL 4.4</a>
+
+            </button>
+        </div>
+    </center>
+    <img class="img2" src="images/h3.jpg" alt="" height="450px" width="300px">
+    <!-- ********************************************************************************************** -->
+    <br>
+    <br>
+    <center>
+        <h2><a href="https://www.facebook.com/thithanh.vo.581">Facebook</a></h2>
+    </center>
+
+    </div>
+    <script>
+        //KHAI Báo biến
+        //**************************************************
+        const data = [
+            ["1", "2", "3"],
+            ["4", "5", "6"],
+            ["7", "8", " "]
+        ];
+        //*****************************************************
+        ///bao mảng 2 chiều 3x3 để quản lý các BUTTON
+        const b = [
+            [document.getElementById("b00"), document.getElementById("b01"), document.getElementById("b02")],
+            [document.getElementById("b10"), document.getElementById("b11"), document.getElementById("b12")],
+            [document.getElementById("b20"), document.getElementById("b21"), document.getElementById("b22")],
+        ]
+        //---------------------------------------------------------------------------------------------
+        //xen ô x, y nằm trong hay nằm ngoài bàn cờ
+        // true = namTrong; false = !namTrong
+        // khai báo các màu có trong game--------------------
+        const bangMau = ["green", "lightgreen", "rgb(233, 237, 201)", "rgb(254, 250, 224)", "rgb(154, 32, 140)", "rgb(255, 234, 234)", "rgb(204, 243, 238)", "rgb(151, 196, 184)", "rgb(201, 238, 255)", "rgb(151, 222, 255)"];
+        let mau = 0;
+        setInterval(myTime, 1000)
+        let gio = 0;
+        let phut = 0;
+        let giay = 0;
+
+        //------------------------PHẦN 2-----------------------------//
+        // NHẠCCCCCCCC
+        let player = document.getElementById("nhac");
+        let soundOn = true;
+        function soud() {
+            if (soundOn) { // Lúc ni, soundOn = true(nhạc đang bật). M click vào thì nó phải tắt đúng ko
+                soundOn = false;
+                player.pause();// Thì thằng này phải tắt
+                document.getElementById("ON").hidden = true; // Thằng on này bị ẩn
+                document.getElementById("OFF").hidden = false; // Thằng off này hiện ra
+            } else { // trường hợp else đây soundOn = false (Nhạc đang tắt). Click vào để mở nhạc
+                soundOn = true;
+                player.play(); // thì nhạc đây phải chạy
+                document.getElementById("ON").hidden = false; // Thằng on hiện ra
+                document.getElementById("OFF").hidden = true; // thằng off ẩn đi. Chạy thử nè
+            }
+        }
+        //------------------------------------------------------------------
+        function myTime() {
+            if (giay < 60) giay++;
+            else {
+                giay = 0;
+                if (phut < 60) phut++;
+                else {
+                    phut = 0;
+                    if (gio < 24) gio++;
+                    else gio = 0;
+                }
+            }
+            txt = gio + ":" + phut + ":" + giay;
+            document.getElementById("myclock").innerHTML = txt;
+        }
+
+        //----------------------------------------------------------------------------//
+        function doiMau() {
+            if (mau < bangMau.length - 2) mau++;
+            else mau = 0;
+            veMauNen();
+
+        }
+        //-------------------------------------------------------------------------------------------------------//
+        function checKWin() {
+            let dem = 0;
+            for (let i = 0; i < 3; i++) {
+                for (let j = 0; j < 3; j++) {
+                    if (i * 3 + j + 1 == data[i][j])
+                        dem++;
+                }
+            }
+            if (dem == 8) return true;
+            return false;
+        }
+
+        //----------------------------------------------------------------------------------------------------------//
+        function namTrong(x, y) {
+            if (x >= 0 && x < 3 && y >= 0 && y < 3) return true;
+            else return false;
+        }
+        //Khai bái hàm
+        //vẽ màu nền dùng : function
+        //**************************************************************************
+        function move(i, j) {
+            //doi o so [i][j] sang ben phải [i][j+1]
+            if (namTrong(i, j + 1) && data[i][j + 1] == " ") {
+                data[i][j + 1] = data[i][j];
+                data[i][j] = " ";
+            } else if (namTrong(i, j - 1) && data[i][j - 1] == " ") {
+                data[i][j - 1] = data[i][j];
+                data[i][j] = " ";
+            } else if (namTrong(i + 1, j) && data[i + 1][j] == " ") {
+                data[i + 1][j] = data[i][j];
+                data[i][j] = " ";
+            } else if (namTrong(i - 1, j) && data[i - 1][j] == " ") {
+                data[i - 1][j] = data[i][j];
+                data[i][j] = " ";
+            }
+            if (soundOn)
+                document.getElementById("nhac2").play();
+
+            veChuSo();
+
+            if (checKWin()) {
+
+                alert("Bạn đã chiến thắng");
+                // xu ly khi thang
+                document.getElementById("upto4").hidden = false;
+            }
+        }
+        //----------------------------------------------
+
+        function randInt(n) {
+            return Math.floor(Math.random() * n);
+
+        }
+        function randMove() {
+            let u = 2, v = 2; //vị trí o trong
+            let soLan = 0;
+            do {
+                switch (randInt(4)) {
+                    case 0:
+                        if (namTrong(u, v - 1)) {
+
+                            data[u][v] = data[u][v - 1];
+                            data[u][v - 1] = " ";
+                            v = v - 1;
+                            //o trong mới  
+                        }
+                        break;
+                    case 1:// DOI O trong sang phai
+                        if (namTrong(u, v + 1)) {
+                            data[u][v] = data[u][v + 1];
+                            data[u][v + 1] = " ";
+                            v = v + 1;
+                        }
+                        //o trong mới
+                        break;
+                    case 2:
+                        if (namTrong(u - 1, v)) {
+                            data[u][v] = data[u - 1][v];
+                            data[u - 1][v] = " ";
+                            u = u - 1;
+                        }
+                        //o trong mới
+                        break;
+                    case 3:
+                        if (namTrong(u + 1, v)) {
+                            data[u][v] = data[u + 1][v];
+                            data[u + 1][v] = " ";
+                            u = u + 1;
+                        }
+                        //o trong mới
+                        break;
+
+                }
+                soLan++;
+            } while (soLan < 20);
+            veChuSo();// ngu cho nay
+        }
+
+        //--------------------------------
+        function veMauNen() {
+            for (let i = 0; i < 3; i++) {
+                for (let j = 0; j < 3; j++) {
+                    if ((i + j) % 2 == 0) {
+                        b[i][j].style.background = bangMau[mau];
+                    } else {
+                        b[i][j].style.background = bangMau[mau + 1];
+                    }
+                }
+            }
+        }
+        //**************************************
+        //chương trình vẽ chữ số
+        function veChuSo() {
+            for (let i = 0; i < 3; i++) {
+                for (let j = 0; j < 3; j++) {
+                    b[i][j].textContent = data[i][j];
+                }
+            }
+        }
+        //chương trinh chinh==========================================
+        //gọi hàm
+        veMauNen();
+        veChuSo();
+        randMove();
+        myTime();
+
+        //------------------------------------------------------------------------------------------------------------------------//
+
+    </script>
+</body>
+
+</html>
